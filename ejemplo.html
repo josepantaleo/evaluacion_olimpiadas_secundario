@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="es">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Proyecto Práctico: Atrapa la Fruta</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        line-height: 1.6;
+        margin: 20px;
+        background-color: #f9f9f9;
+        color: #333;
+      }
+
+      h1,
+      h2 {
+        color: #2c3e50;
+      }
+
+      pre {
+        background-color: #eee;
+        padding: 10px;
+        border-radius: 5px;
+        overflow-x: auto;
+      }
+
+      code {
+        font-family: "Courier New", monospace;
+      }
+
+      .emoji {
+        font-size: 1.2em;
+      }
+
+      ul {
+        margin-top: 0;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Ejemplo Completo Video Juego con Scracth</h1>
+    <h2 class="emoji">🧠 Proyecto Práctico: Atrapa la Fruta con Scratch</h2>
+
+    <h2 class="emoji">🎯 Objetivo del proyecto</h2>
+    <p>
+      Crear un juego en Scratch donde el jugador controla una canasta que debe
+      atrapar frutas que caen del cielo. El jugador gana puntos al atrapar
+      frutas y pierde vidas si las frutas tocan el suelo. El juego termina
+      cuando se acaban las vidas.
+    </p>
+
+    <h2 class="emoji">✅ PASO 1: Preparación del proyecto</h2>
+    <h3 class="emoji">🎓 Ejercicio 1: Configurar el escenario</h3>
+    <ul>
+      <li>Abre Scratch Desktop.</li>
+      <li>Elimina el sprite del gato.</li>
+      <li>
+        Ve a la pestaña “Fondos” y elige uno (por ejemplo: Azul cielo, Jardín,
+        etc.).
+      </li>
+    </ul>
+
+    <h2 class="emoji">🧺 PASO 2: Crear la Canasta</h2>
+    <h3 class="emoji">🎓 Ejercicio 2: Agregar el sprite de la canasta</h3>
+    <ul>
+      <li>Haz clic en “Elegir un sprite”.</li>
+      <li>Busca un sprite como Canasta o un personaje para atrapar frutas.</li>
+      <li>Cámbiale el nombre a: <strong>Canasta</strong>.</li>
+    </ul>
+
+    <h4 class="emoji">🧩 Código para la canasta:</h4>
+    <pre><code>cuando presiono bandera verde
+ir a x: 0 y: -150
+mostrar
+por siempre
+    si &lt;tecla flecha derecha presionada&gt;
+        cambiar x por 10
+    si &lt;tecla flecha izquierda presionada&gt;
+        cambiar x por -10</code></pre>
+
+    <h2 class="emoji">🍎 PASO 3: Agregar frutas con clones</h2>
+    <h3 class="emoji">🎓 Ejercicio 3: Crear un sprite de fruta</h3>
+    <ul>
+      <li>Haz clic en “Elegir un sprite”.</li>
+      <li>Busca una fruta, por ejemplo <strong>Manzana</strong>.</li>
+      <li>Cámbiale el nombre a: <strong>Fruta</strong>.</li>
+    </ul>
+
+    <h3 class="emoji">🎓 Ejercicio 4: Añadir más disfraces (otras frutas)</h3>
+    <ul>
+      <li>En el sprite de Fruta, ve a la pestaña “Disfraces”.</li>
+      <li>
+        Agrega más frutas desde la biblioteca (ej. plátano, uva, sandía...).
+      </li>
+    </ul>
+
+    <h2 class="emoji">🧮 PASO 4: Variables del juego</h2>
+    <h3 class="emoji">🎓 Ejercicio 5: Crear variables</h3>
+    <ul>
+      <li>
+        Ve a “Variables” y crea:
+        <ul>
+          <li><strong>puntos</strong></li>
+          <li><strong>vidas</strong></li>
+        </ul>
+      </li>
+    </ul>
+
+    <h2 class="emoji">
+      👾 PASO 5: Código del sprite Fruta (con clones y sonido)
+    </h2>
+
+    <h4>🧩 Parte 1: Iniciar variables y crear clones</h4>
+    <pre><code>cuando presiono bandera verde
+establecer [puntos v] a 0
+establecer [vidas v] a 3
+ocultar
+por siempre
+    esperar (número al azar entre 1 y 3) segundos
+    crear clon de mí mismo</code></pre>
+
+    <h4>🧩 Parte 2: Comportamiento del clon</h4>
+    <pre><code>cuando empiezo como clon
+cambiar disfraz a (disfraz al azar)
+ir a x: (número al azar entre -200 y 200) y: 180
+mostrar
+repetir hasta &lt;tocando [Canasta v] o (y posición &lt; -160)&gt;
+    cambiar y por -5
+    esperar 0.03 segundos
+fin
+si &lt;tocando [Canasta v]&gt; entonces
+    cambiar [puntos v] por 1
+    reproducir sonido [pop v]
+si &lt;y posición &lt; -160&gt; entonces
+    cambiar [vidas v] por -1
+    reproducir sonido [bonk v]
+eliminar este clon</code></pre>
+
+    <p>
+      <strong>🔊 Nota:</strong> Ve a la pestaña “Sonidos” y agrega efectos como
+      <em>pop</em>, <em>bonk</em>, o cualquier otro sonido divertido para
+      frutas.
+    </p>
+
+    <h2 class="emoji">🛑 PASO 6: Fin del juego</h2>
+    <h3 class="emoji">🎓 Ejercicio 6: Agregar control de Game Over</h3>
+    <p>En cualquier sprite (por ejemplo en “Canasta”):</p>
+    <pre><code>cuando presiono bandera verde
+por siempre
+    si &lt;vidas = 0&gt; entonces
+        decir [¡Game Over! Puntos: ] (puntos) por 3 segundos
+        detener todo</code></pre>
+
+    <h2 class="emoji">💾 PASO 7: Guardar tu proyecto</h2>
+    <h3 class="emoji">🎓 Ejercicio 7: Guardar como archivo descargable</h3>
+    <ul>
+      <li>Ve a <strong>Archivo &gt; Guardar como...</strong></li>
+      <li>Ponle un nombre como <strong>AtrapaLaFruta.sb3</strong>.</li>
+      <li>Guarda el archivo en tu computadora.</li>
+    </ul>
+
+    <h2 class="emoji">🌟 Extras opcionales (si terminas temprano)</h2>
+    <h3 class="emoji">🎓 Ejercicio Extra 1: Música de fondo</h3>
+    <ul>
+      <li>En el escenario, ve a la pestaña “Sonidos”.</li>
+      <li>Agrega una canción (por ejemplo “Dance Around”).</li>
+    </ul>
+    <pre><code>cuando presiono bandera verde
+por siempre
+    reproducir sonido [Dance Around v]</code></pre>
+
+    <h3 class="emoji">🎓 Ejercicio Extra 2: Aumentar dificultad</h3>
+    <ul>
+      <li>Crea una variable <strong>velocidad</strong>.</li>
+      <li>Cada vez que consigas 5 puntos, aumenta la velocidad de caída.</li>
+    </ul>
+
+    <h2 class="emoji">🏁 ¡Has terminado!</h2>
+    <p>Ahora tienes un juego funcional de "Atrapa la fruta" con:</p>
+    <ul>
+      <li>Varios tipos de frutas 🍇🍌🍎</li>
+      <li>Sistema de puntos y vidas 🎯❤️</li>
+      <li>Sonidos de atrapar y perder 🔊</li>
+      <li>Posibilidad de expansión 🎮</li>
+    </ul>
+
+    <a
+      href="index.html"
+      rel="noopener noreferrer"
+      style="
+        display: inline-block;
+        padding: 10px 20px;
+        background-color: #4caf50;
+        color: white;
+        text-decoration: none;
+        border-radius: 5px;
+        font-weight: bold;
+        font-family: Arial, sans-serif;
+        transition: background-color 0.3s ease;
+      "
+    >
+      Volver a la página principal
+    </a>
+
+    <style>
+      a:hover {
+        background-color: #45a049;
+      }
+    </style>
+  </body>
+</html>

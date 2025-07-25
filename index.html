@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Evaluación de Proyectos Scratch</title>
+    <link rel="stylesheet" href="estilos.css" />
+</head>
+<body>
+    <div class="container">
+        <h1>Evaluación de Proyectos Scratch</h1>
+
+        <div id="notification-bar" class="notification" style="display: none;"></div>
+
+        <section class="evaluadores-globales-section">
+            <h2>Datos de los Evaluadores</h2>
+            <div class="form-group">
+                <label for="evaluador1Global">Evaluador 1:</label>
+                <input type="text" id="evaluador1Global" placeholder="Nombre del Evaluador 1" required />
+            </div>
+            <div class="form-group">
+                <label for="evaluador2Global">Evaluador 2 (opcional):</label>
+                <input type="text" id="evaluador2Global" placeholder="Nombre del Evaluador 2" />
+            </div>
+            <div class="form-group">
+                <label for="evaluador3Global">Evaluador 3 (opcional):</label>
+                <input type="text" id="evaluador3Global" placeholder="Nombre del Evaluador 3" />
+            </div>
+            <button id="guardarEvaluadoresBtn">Guardar Evaluadores</button>
+            <button id="eliminarEvaluadoresBtn" class="delete-btn" style="margin-left: 10px;">Eliminar Evaluadores</button>
+            <div id="evaluadoresActuales" style="margin-top: 10px;"></div>
+        </section>
+        <form id="formularioEvaluacion">
+            <div class="form-group">
+                <label for="selectGrupo">Grupo:</label>
+                <select id="selectGrupo" required></select>
+            </div>
+
+            <div id="grupoInfo" class="group-info" style="display: none;"></div>
+            <div class="form-group">
+                <label for="idProyecto">ID Proyecto Scratch (opcional):</label>
+                <input type="text" id="idProyecto" placeholder="Ej: 123456789" />
+            </div>
+
+            <div class="form-group score-group">
+                <label for="puntajeFuncionalidad">Puntaje Funcionalidad (0-10):</label>
+                <input type="number" id="puntajeFuncionalidad" min="0" max="10" required />
+            </div>
+            <div class="form-group">
+                <label for="obsFuncionalidad">Observaciones Funcionalidad:</label>
+                <textarea id="obsFuncionalidad" rows="2" placeholder="Observaciones Funcionalidad"></textarea>
+            </div>
+
+            <div class="form-group score-group">
+                <label for="puntajeProgramacion">Puntaje Programación (0-10):</label>
+                <input type="number" id="puntajeProgramacion" min="0" max="10" required />
+            </div>
+            <div class="form-group">
+                <label for="obsProgramacion">Observaciones Programación:</label>
+                <textarea id="obsProgramacion" rows="2" placeholder="Observaciones Programación"></textarea>
+            </div>
+
+            <div class="form-group score-group">
+                <label for="puntajeDiseno">Puntaje Diseño/UX (0-10):</label>
+                <input type="number" id="puntajeDiseno" min="0" max="10" required />
+            </div>
+            <div class="form-group">
+                <label for="obsDiseno">Observaciones Diseño/UX:</label>
+                <textarea id="obsDiseno" rows="2" placeholder="Observaciones Diseño/UX"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="mencionEspecialManual">Mención Especial (opcional):</label>
+                <input type="text" id="mencionEspecialManual" placeholder="Escribe una mención especial" />
+            </div>
+
+            <input type="hidden" id="indiceEdicion" />
+
+            <button type="submit">Guardar Evaluación</button>
+        </form>
+
+        <section class="results-section">
+            <h2>Evaluaciones Guardadas</h2>
+            <div id="listaEvaluaciones" class="evaluaciones-list">
+                <p id="noDatosMensaje">No hay evaluaciones guardadas aún.</p>
+            </div>
+            <button id="limpiarDatos" style="display: none;">Eliminar todas las evaluaciones</button>
+        </section>
+
+        <section class="results-section">
+            <h2>Clasificación de Proyectos</h2>
+            <div id="clasificacionResultados" class="clasificacion-container">
+                <p>No hay evaluaciones para mostrar la clasificación.</p>
+            </div>
+        </section>
+
+        <div class="export-section">
+            <button id="exportarJsonBtn">Exportar Datos</button>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
