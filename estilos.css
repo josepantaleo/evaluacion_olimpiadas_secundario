@@ -48,12 +48,27 @@ form {
 
 label {
     font-weight: 600;
-    margin-bottom: 5px;
+    margin-bottom: 10px;
     display: block;
+  
 }
 
-input[type="text"],
+
 input[type="number"],
+textarea,
+select {
+    width: 10%;
+    padding: 15px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+    text-align: center;
+    transition: border 0.2s ease;
+    font-size: 20px;
+
+
+}
+input[type="text"],
 textarea,
 select {
     width: 100%;
@@ -61,7 +76,9 @@ select {
     border: 1px solid #ccc;
     border-radius: 4px;
     box-sizing: border-box;
+   text-align: left;
     transition: border 0.2s ease;
+
 }
 
 input:focus,
@@ -288,4 +305,47 @@ legend {
     color: var(--primary-color);
     padding: 0 10px;
     font-size: 1.2em;
+}
+/* --- Menu de Navegación Rápida --- */
+#quick-nav {
+    position: fixed; /* Fijo en la pantalla */
+    top: 20px; /* Separación desde la parte superior */
+    right: 20px; /* Separación desde la derecha */
+    background-color: #333; /* Color de fondo oscuro */
+    padding: 10px 15px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    z-index: 1000; /* Asegura que esté por encima de otros elementos */
+}
+
+#quick-nav ul {
+    list-style: none; /* Elimina los puntos de la lista */
+    margin: 0;
+    padding: 0;
+}
+
+#quick-nav ul li {
+    margin-bottom: 8px; /* Espacio entre los elementos del menú */
+}
+
+#quick-nav ul li:last-child {
+    margin-bottom: 0; /* No hay margen en el último elemento */
+}
+
+#quick-nav ul li a {
+    color: #fff; /* Color del texto de los enlaces */
+    text-decoration: none; /* Sin subrayado */
+    font-size: 0.95em;
+    padding: 5px 0;
+    display: block; /* Para que el área clicable sea mayor */
+    transition: color 0.2s ease-in-out;
+}
+
+#quick-nav ul li a:hover {
+    color: #007bff; /* Color al pasar el ratón por encima */
+}
+
+/* --- Smooth Scroll para HTML (importante para la navegación fluida) --- */
+html {
+    scroll-behavior: smooth;
 }

@@ -30,7 +30,7 @@ async function cargarGrupos() {
         grupos = await response.json();
         poblarSelectGrupos();
     } catch (error) {
-        mostrarNotificacion(`Error cargando grupos: ${error.message}`, 'error');
+        mostrarNotificacion(`Error cargando grupos: ${error.message}. Asegúrate de que el archivo 'grupos.json' exista y sea válido.`, 'error');
     }
 }
 
@@ -51,7 +51,7 @@ function setupEventListeners() {
     document.getElementById('limpiarDatos').addEventListener('click', limpiarTodasEvaluaciones);
     document.getElementById('exportarJsonBtn').addEventListener('click', exportarDatos);
     document.getElementById('guardarEvaluadoresBtn').addEventListener('click', guardarEvaluadoresGlobales);
-    document.getElementById('eliminarEvaluadoresBtn').addEventListener('click', eliminarEvaluadoresGlobales); // ¡NUEVO LISTENER!
+    document.getElementById('eliminarEvaluadoresBtn').addEventListener('click', eliminarEvaluadoresGlobales);
     document.getElementById('selectGrupo').addEventListener('change', mostrarInfoGrupo);
 }
 
@@ -68,8 +68,8 @@ function guardarEvaluadoresGlobales() {
 
     evaluadoresGlobales = {
         evaluador1: eval1,
-        evaluador2: eval2 || null,
-        evaluador3: eval3 || null
+        evaluador2: eval2 || null, // Guarda como null si está vacío
+        evaluador3: eval3 || null  // Guarda como null si está vacío
     };
 
     localStorage.setItem('evaluadoresScratch', JSON.stringify(evaluadoresGlobales));
@@ -85,6 +85,7 @@ function cargarEvaluadoresGlobales() {
         document.getElementById('evaluador2Global').value = evaluadoresGlobales.evaluador2 || '';
         document.getElementById('evaluador3Global').value = evaluadoresGlobales.evaluador3 || '';
     }
+    mostrarEvaluadoresGlobales();
 }
 
 function mostrarEvaluadoresGlobales() {
@@ -100,39 +101,35 @@ function mostrarEvaluadoresGlobales() {
     `;
 }
 
-// ¡NUEVA FUNCIÓN PARA ELIMINAR EVALUADORES GLOBALES!
 function eliminarEvaluadoresGlobales() {
     if (confirm("¿Estás seguro de que deseas eliminar los nombres de todos los evaluadores? Esto no afectará las evaluaciones ya guardadas.")) {
-        evaluadoresGlobales = { // Resetear los evaluadores a su estado inicial vacío
+        evaluadoresGlobales = {
             evaluador1: "",
             evaluador2: "",
             evaluador3: ""
         };
-        localStorage.removeItem('evaluadoresScratch'); // Eliminar del localStorage
-        
-        // Limpiar los campos de entrada de evaluadores
+        localStorage.removeItem('evaluadoresScratch');
         document.getElementById('evaluador1Global').value = '';
         document.getElementById('evaluador2Global').value = '';
         document.getElementById('evaluador3Global').value = '';
 
-        mostrarEvaluadoresGlobales(); // Actualizar la visualización para mostrar "No definido"
+        mostrarEvaluadoresGlobales();
         mostrarNotificacion('Evaluadores eliminados correctamente.', 'success');
     }
 }
-
 
 // --- Gestión de Evaluaciones ---
 function guardarEvaluacion(e) {
     e.preventDefault();
 
     if (!evaluadoresGlobales.evaluador1) {
-        mostrarNotificacion('Por favor, defina y guarde el **Evaluador 1** en la sección de "Datos de los Evaluadores" antes de guardar una evaluación.', 'error');
+        mostrarNotificacion('Por favor, defina y guarde el **Evaluador 1** en la sección "Datos de los Evaluadores" antes de guardar una evaluación.', 'error');
         return;
     }
 
     const grupoId = document.getElementById('selectGrupo').value;
     if (!grupoId) {
-        mostrarNotificacion('Seleccione un grupo.', 'error');
+        mostrarNotificacion('Seleccione un grupo para la evaluación.', 'error');
         return;
     }
 
@@ -142,36 +139,63 @@ function guardarEvaluacion(e) {
         return;
     }
 
+    // Recopilar y validar todos los puntajes
     const puntajeFuncionalidad = Number(document.getElementById('puntajeFuncionalidad').value);
     const puntajeProgramacion = Number(document.getElementById('puntajeProgramacion').value);
     const puntajeDiseno = Number(document.getElementById('puntajeDiseno').value);
+    const puntajeCreatividad = Number(document.getElementById('puntajeCreatividad').value);
+    const puntajeTrabajoEquipo = Number(document.getElementById('puntajeTrabajoEquipo').value);
+    const puntajeProcesoTrabajo = Number(document.getElementById('puntajeProcesoTrabajo').value);
 
-    // Validar que los puntajes estén dentro del rango
-    if (isNaN(puntajeFuncionalidad) || puntajeFuncionalidad < 0 || puntajeFuncionalidad > 10 ||
-        isNaN(puntajeProgramacion) || puntajeProgramacion < 0 || puntajeProgramacion > 10 ||
-        isNaN(puntajeDiseno) || puntajeDiseno < 0 || puntajeDiseno > 10) {
-        mostrarNotificacion('Los puntajes deben estar entre 0 y 10.', 'error');
+    // Función de ayuda para validar un puntaje
+    const validarPuntaje = (puntaje, nombreCampo) => {
+        if (isNaN(puntaje) || puntaje < 0 || puntaje > 10) {
+            mostrarNotificacion(`El puntaje de **${nombreCampo}** debe estar entre 0 y 10.`, 'error');
+            return false;
+        }
+        return true;
+    };
+
+    if (!validarPuntaje(puntajeFuncionalidad, 'Funcionalidad') ||
+        !validarPuntaje(puntajeProgramacion, 'Programación') ||
+        !validarPuntaje(puntajeDiseno, 'Diseño/UX') ||
+        !validarPuntaje(puntajeCreatividad, 'Creatividad y Originalidad') ||
+        !validarPuntaje(puntajeTrabajoEquipo, 'Trabajo en Equipo') ||
+        !validarPuntaje(puntajeProcesoTrabajo, 'Proceso de Trabajo y Esfuerzo')) {
         return;
     }
+
+    // Calcular el total con todos los criterios
+    const total = puntajeFuncionalidad + puntajeProgramacion + puntajeDiseno +
+        puntajeCreatividad + puntajeTrabajoEquipo + puntajeProcesoTrabajo;
 
     const evaluacion = {
         evaluador1: evaluadoresGlobales.evaluador1,
         evaluador2: evaluadoresGlobales.evaluador2,
         evaluador3: evaluadoresGlobales.evaluador3,
+        fechaEvaluacion: new Date().toISOString(),
         grupoId: grupoId,
         nombreGrupo: grupoSeleccionado.nombre,
         escuelaGrupo: grupoSeleccionado.escuela,
         integrantesGrupo: grupoSeleccionado.integrantes,
         gradoGrupo: grupoSeleccionado.grado || 'N/A',
         idProyecto: document.getElementById('idProyecto').value.trim() || null,
+
         puntajeFuncionalidad: puntajeFuncionalidad,
         obsFuncionalidad: document.getElementById('obsFuncionalidad').value.trim() || null,
         puntajeProgramacion: puntajeProgramacion,
         obsProgramacion: document.getElementById('obsProgramacion').value.trim() || null,
         puntajeDiseno: puntajeDiseno,
         obsDiseno: document.getElementById('obsDiseno').value.trim() || null,
+        puntajeCreatividad: puntajeCreatividad,
+        obsCreatividad: document.getElementById('obsCreatividad').value.trim() || null,
+        puntajeTrabajoEquipo: puntajeTrabajoEquipo,
+        obsTrabajoEquipo: document.getElementById('obsTrabajoEquipo').value.trim() || null,
+        puntajeProcesoTrabajo: puntajeProcesoTrabajo,
+        obsProcesoTrabajo: document.getElementById('obsProcesoTrabajo').value.trim() || null,
+
         mencion: document.getElementById('mencionEspecialManual').value.trim() || null,
-        total: puntajeFuncionalidad + puntajeProgramacion + puntajeDiseno
+        total: total
     };
 
     const indiceEdicion = document.getElementById('indiceEdicion').value;
@@ -179,10 +203,10 @@ function guardarEvaluacion(e) {
     if (indiceEdicion !== '') {
         evaluaciones[Number(indiceEdicion)] = evaluacion;
         document.getElementById('indiceEdicion').value = '';
-        mostrarNotificacion('Evaluación actualizada.', 'success');
+        mostrarNotificacion('Evaluación actualizada correctamente.', 'success');
     } else {
         evaluaciones.push(evaluacion);
-        mostrarNotificacion('Evaluación guardada.', 'success');
+        mostrarNotificacion('Evaluación guardada correctamente.', 'success');
     }
 
     guardarEvaluaciones();
@@ -199,6 +223,7 @@ function editarEvaluacion(idx) {
 
     document.getElementById('selectGrupo').value = ev.grupoId;
     document.getElementById('selectGrupo').dispatchEvent(new Event('change'));
+
     document.getElementById('idProyecto').value = ev.idProyecto || '';
     document.getElementById('puntajeFuncionalidad').value = ev.puntajeFuncionalidad;
     document.getElementById('obsFuncionalidad').value = ev.obsFuncionalidad || '';
@@ -206,6 +231,13 @@ function editarEvaluacion(idx) {
     document.getElementById('obsProgramacion').value = ev.obsProgramacion || '';
     document.getElementById('puntajeDiseno').value = ev.puntajeDiseno;
     document.getElementById('obsDiseno').value = ev.obsDiseno || '';
+    document.getElementById('puntajeCreatividad').value = ev.puntajeCreatividad || '';
+    document.getElementById('obsCreatividad').value = ev.obsCreatividad || '';
+    document.getElementById('puntajeTrabajoEquipo').value = ev.puntajeTrabajoEquipo || '';
+    document.getElementById('obsTrabajoEquipo').value = ev.obsTrabajoEquipo || '';
+    document.getElementById('puntajeProcesoTrabajo').value = ev.puntajeProcesoTrabajo || '';
+    document.getElementById('obsProcesoTrabajo').value = ev.obsProcesoTrabajo || '';
+
     document.getElementById('mencionEspecialManual').value = ev.mencion || '';
     document.getElementById('indiceEdicion').value = idx;
 
@@ -213,16 +245,16 @@ function editarEvaluacion(idx) {
 }
 
 function eliminarEvaluacion(idx) {
-    if (confirm("¿Seguro que deseas eliminar esta evaluación?")) {
+    if (confirm("¿Estás seguro de que deseas eliminar esta evaluación?")) {
         evaluaciones.splice(idx, 1);
         guardarEvaluaciones();
         actualizarInterfaz();
-        mostrarNotificacion('Evaluación eliminada.', 'success');
+        mostrarNotificacion('Evaluación eliminada correctamente.', 'success');
     }
 }
 
 function limpiarTodasEvaluaciones() {
-    if (confirm("¡ATENCIÓN! ¿Seguro que deseas eliminar TODAS las evaluaciones? Esta acción es irreversible.")) {
+    if (confirm("¡ATENCIÓN! ¿Estás seguro de que deseas eliminar TODAS las evaluaciones? Esta acción es irreversible.")) {
         evaluaciones = [];
         guardarEvaluaciones();
         actualizarInterfaz();
@@ -235,6 +267,7 @@ function limpiarFormularioEvaluacion() {
     document.getElementById('indiceEdicion').value = '';
     document.getElementById('grupoInfo').style.display = 'none';
     document.getElementById('grupoInfo').innerHTML = '';
+    document.getElementById('selectGrupo').value = '';
 }
 
 function cargarEvaluaciones() {
@@ -251,6 +284,7 @@ function guardarEvaluaciones() {
 // --- Funciones de visualización y utilidad ---
 function actualizarInterfaz() {
     mostrarEvaluaciones();
+    mostrarEvaluadoresGlobales();
     mostrarClasificacion();
 }
 
@@ -261,9 +295,11 @@ function mostrarEvaluaciones() {
     if (evaluaciones.length === 0) {
         lista.innerHTML = '<p id="noDatosMensaje">No hay evaluaciones guardadas aún.</p>';
         document.getElementById('limpiarDatos').style.display = 'none';
+        document.getElementById('exportarJsonBtn').style.display = 'none';
         return;
     }
     document.getElementById('limpiarDatos').style.display = 'inline-block';
+    document.getElementById('exportarJsonBtn').style.display = 'inline-block';
 
     evaluaciones.forEach((ev, idx) => {
         const evaluadoresDisplay = [];
@@ -273,6 +309,8 @@ function mostrarEvaluaciones() {
         const evaluadoresHtml = evaluadoresDisplay.length > 0
             ? `<p><strong>Evaluador(es):</strong> ${evaluadoresDisplay.join(', ')}</p>`
             : '';
+
+        const fechaLegible = ev.fechaEvaluacion ? new Date(ev.fechaEvaluacion).toLocaleDateString('es-AR') : 'N/A';
 
         const div = document.createElement('div');
         div.className = 'evaluacion-card';
@@ -284,6 +322,7 @@ function mostrarEvaluaciones() {
                 <button class="delete-btn" onclick="eliminarEvaluacion(${idx})">Eliminar</button>
             </div>
             ${evaluadoresHtml}
+            <p><strong>Fecha de Evaluación:</strong> ${fechaLegible}</p>
             <p><strong>Grupo:</strong> ${ev.nombreGrupo}</p>
             <p><strong>Escuela:</strong> ${ev.escuelaGrupo}</p>
             <p><strong>Grado/Curso:</strong> ${ev.gradoGrupo}</p>
@@ -295,13 +334,18 @@ function mostrarEvaluaciones() {
             <p><strong>Observaciones Programación:</strong> ${ev.obsProgramacion || 'Sin observaciones'}</p>
             <p><strong>Diseño/UX:</strong> ${ev.puntajeDiseno} / 10</p>
             <p><strong>Observaciones Diseño/UX:</strong> ${ev.obsDiseno || 'Sin observaciones'}</p>
+            <p><strong>Creatividad y Originalidad:</strong> ${ev.puntajeCreatividad} / 10</p>
+            <p><strong>Observaciones Creatividad:</strong> ${ev.obsCreatividad || 'Sin observaciones'}</p>
+            <p><strong>Trabajo en Equipo:</strong> ${ev.puntajeTrabajoEquipo} / 10</p>
+            <p><strong>Observaciones Trabajo en Equipo:</strong> ${ev.obsTrabajoEquipo || 'Sin observaciones'}</p>
+            <p><strong>Proceso de Trabajo y Esfuerzo:</strong> ${ev.puntajeProcesoTrabajo} / 10</p>
+            <p><strong>Observaciones Proceso de Trabajo:</strong> ${ev.obsProcesoTrabajo || 'Sin observaciones'}</p>
             ${ev.mencion ? `<p class="mencion-especial-display"><strong>Mención Especial:</strong> ${ev.mencion}</p>` : ''}
-            <p><strong>Total:</strong> ${ev.total} puntos</p>
+            <p class="total-score"><strong>Total:</strong> ${ev.total} puntos</p>
         `;
         lista.appendChild(div);
     });
 }
-
 
 function mostrarClasificacion() {
     const contenedor = document.getElementById('clasificacionResultados');
@@ -316,7 +360,14 @@ function mostrarClasificacion() {
 
     let html = `<h2>Clasificación de Proyectos</h2><ol class="clasificacion-list">`;
 
+    let puestoActual = 1;
+    let puntajeAnterior = null;
     ordenadas.forEach((ev, i) => {
+        if (i > 0 && ev.total !== puntajeAnterior) {
+            puestoActual = i + 1;
+        }
+        puntajeAnterior = ev.total;
+
         const evaluadoresDisplay = [];
         if (ev.evaluador1) evaluadoresDisplay.push(ev.evaluador1);
         if (ev.evaluador2) evaluadoresDisplay.push(ev.evaluador2);
@@ -325,25 +376,25 @@ function mostrarClasificacion() {
             ? ` (Evaluador(es): ${evaluadoresDisplay.join(', ')})`
             : '';
 
-        let puesto = '';
+        let puestoTexto = '';
         let clasePuesto = '';
 
-        if (i === 0) {
-            puesto = '1er Puesto 🥇';
+        if (puestoActual === 1) {
+            puestoTexto = '1er Puesto 🥇';
             clasePuesto = 'primer-puesto';
-        } else if (i === 1) {
-            puesto = '2do Puesto 🥈';
+        } else if (puestoActual === 2) {
+            puestoTexto = '2do Puesto 🥈';
             clasePuesto = 'segundo-puesto';
-        } else if (i === 2) {
-            puesto = '3er Puesto 🥉';
+        } else if (puestoActual === 3) {
+            puestoTexto = '3er Puesto 🥉';
             clasePuesto = 'tercer-puesto';
         } else {
-            puesto = `${i + 1}º Puesto`;
+            puestoTexto = `${puestoActual}º Puesto`;
         }
 
         html += `
             <li class="item-clasificacion ${clasePuesto}">
-                <span class="clasificacion-puesto">${puesto}:</span>
+                <span class="clasificacion-puesto">${puestoTexto}:</span>
                 <span class="clasificacion-grupo">
                     <strong>${ev.nombreGrupo}</strong><br>
                     <strong>Escuela: ${ev.escuelaGrupo}</strong><br>
@@ -360,69 +411,83 @@ function mostrarClasificacion() {
     contenedor.innerHTML = html;
 }
 
-function mostrarNotificacion(mensaje, tipo) {
-    const barra = document.getElementById('notification-bar');
-    barra.textContent = mensaje;
-    barra.className = tipo === 'success' ? 'notification success' : 'notification error';
-    barra.style.display = 'block';
-    setTimeout(() => {
-        barra.style.display = 'none';
-    }, 3000);
+// --- FUNCIÓN CLAVE: Muestra la notificación en la barra ---
+function mostrarNotificacion(mensaje, tipo = 'info') {
+    const contenedor = document.getElementById('notification-bar');
+    if (!contenedor) {
+        console.error("Error: Elemento #notification-bar no encontrado en el DOM.");
+        return;
+    }
+
+    contenedor.innerHTML = mensaje;
+    contenedor.className = `notification ${tipo}`;
+    contenedor.style.display = 'block';
+
+    clearTimeout(contenedor.timerId);
+    contenedor.timerId = setTimeout(() => {
+        contenedor.style.display = 'none';
+        contenedor.innerHTML = '';
+        contenedor.className = 'notification';
+    }, 7000); // 7 segundos
 }
 
+function mostrarInfoGrupo() {
+    const grupoId = this.value;
+    const infoDiv = document.getElementById('grupoInfo');
+
+    if (!grupoId) {
+        infoDiv.style.display = 'none';
+        infoDiv.innerHTML = '';
+        return;
+    }
+
+    const grupo = grupos.find(g => g.id === grupoId);
+    if (!grupo) {
+        infoDiv.style.display = 'none';
+        infoDiv.innerHTML = '';
+        return;
+    }
+
+    infoDiv.style.display = 'block';
+    infoDiv.innerHTML = `
+        <p><strong>Nombre:</strong> ${grupo.nombre}</p>
+        <p><strong>Escuela:</strong> ${grupo.escuela}</p>
+        <p><strong>Integrantes:</strong> ${grupo.integrantes ? grupo.integrantes.join(', ') : 'N/A'}</p>
+        <p><strong>Grado/Curso:</strong> ${grupo.grado || 'N/A'}</p>
+    `;
+}
+
+// --- Exportar datos ---
 function exportarDatos() {
     if (evaluaciones.length === 0) {
-        mostrarNotificacion("No hay evaluaciones para exportar.", 'error');
+        mostrarNotificacion('No hay evaluaciones para exportar.', 'error');
         return;
     }
 
     const evaluacionesConPuesto = [...evaluaciones].sort((a, b) => b.total - a.total);
 
     let puestoActual = 1;
-    let puntajeAnterior = -1;
+    let puntajeAnterior = null;
     evaluacionesConPuesto.forEach((ev, index) => {
-        if (ev.total !== puntajeAnterior) {
+        if (index > 0 && ev.total !== puntajeAnterior) {
             puestoActual = index + 1;
         }
         ev.puesto = puestoActual;
         puntajeAnterior = ev.total;
     });
 
-    const jsonString = JSON.stringify(evaluacionesConPuesto, null, 2);
+    const fecha = new Date().toISOString().slice(0, 10);
+    const filename = `evaluaciones_scratch_${fecha}.TXT`;
 
-    const blob = new Blob([jsonString], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
+    const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(evaluacionesConPuesto, null, 2));
+    const dlAnchorElem = document.createElement('a');
+    dlAnchorElem.setAttribute("href", dataStr);
+    dlAnchorElem.setAttribute("download", filename);
+    document.body.appendChild(dlAnchorElem);
+    dlAnchorElem.click();
+    dlAnchorElem.remove();
+    URL.revokeObjectURL(dataStr);
 
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'evaluaciones_scratch.txt';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-    URL.revokeObjectURL(url);
+ alert(`¡Éxito! El archivo '${filename}' se ha descargado correctamente.\nPor favor, envíalo a ipem146centenario@gmail.com con el asunto: OLIMPIADAS.`);
 
-    mostrarNotificacion("Resultados exportados a TXT.", 'success');
-    alert("¡Éxito! El archivo 'evaluaciones_scratch.txt' se ha descargado.\nPor favor, envíalo a ipem146centenario@gmail.com con el asunto: OLIMPIADAS");
-}
-
-function mostrarInfoGrupo() {
-    const grupoId = this.value;
-    const grupoInfoDiv = document.getElementById('grupoInfo');
-    if (!grupoId) {
-        grupoInfoDiv.style.display = 'none';
-        grupoInfoDiv.innerHTML = '';
-        return;
-    }
-    const grupo = grupos.find(g => g.id === grupoId);
-    if (!grupo) {
-        grupoInfoDiv.style.display = 'none';
-        grupoInfoDiv.innerHTML = '';
-        return;
-    }
-    grupoInfoDiv.style.display = 'block';
-    grupoInfoDiv.innerHTML = `
-        <p><strong>Escuela:</strong> ${grupo.escuela}</p>
-        <p><strong>Grado/Curso:</strong> ${grupo.grado || 'N/A'}</p>
-        <p><strong>Integrantes:</strong> ${grupo.integrantes.join(', ')}</p>
-    `;
 }

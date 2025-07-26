@@ -7,14 +7,25 @@
     <link rel="stylesheet" href="estilos.css" />
 </head>
 <body>
-    <div class="container">
-      <h1>Olimpiadas Provinciales de Programación</h1>
-      <h2>Sede Zonal: Villa Dolores - IPEM 146 "Centenario"</h2>
+    <nav id="quick-nav">
+        <ul>
+            <li><a href="#inicio">Inicio</a></li>
+            <li><a href="#evaluadores-section">Evaluadores</a></li>
+            <li><a href="#formulario-section">Evaluar Proyecto</a></li>
+             <li><a href="#clasificacion-section">Clasificación</a></li>
+            <li><a href="#evaluaciones-guardadas-section">Evaluaciones Guardadas</a></li>
+           
+        </ul>
+    </nav>
+
+    <div class="container" id="inicio">
+        <h1>Olimpiadas Provinciales de Programación</h1>
+        <h2>Sede Zonal: Villa Dolores - IPEM 146 "Centenario"</h2>
         <h2>Evaluación de Proyectos Scratch Nivel: Secundario</h2>
 
         <div id="notification-bar" class="notification" style="display: none;"></div>
 
-        <section class="evaluadores-globales-section">
+        <section id="evaluadores-section" class="evaluadores-globales-section">
             <h3>Datos de los Evaluadores</h3>
             <div class="form-group">
                 <label for="evaluador1Global">Evaluador 1:</label>
@@ -32,65 +43,144 @@
             <button id="eliminarEvaluadoresBtn" class="delete-btn" style="margin-left: 10px;">Eliminar Evaluadores</button>
             <div id="evaluadoresActuales" style="margin-top: 10px;"></div>
         </section>
-        <form id="formularioEvaluacion">
-            <div class="form-group">
-                <label for="selectGrupo">Grupo:</label>
-                <select id="selectGrupo" required></select>
-            </div>
 
-            <div id="grupoInfo" class="group-info" style="display: none;"></div>
-            <div class="form-group">
-                <label for="idProyecto">ID Proyecto Scratch (opcional):</label>
-                <input type="text" id="idProyecto" placeholder="Ej: 123456789" />
-            </div>
+        <section id="formulario-section">
+            <h2>Formulario de Evaluación</h2>
+            <form id="formularioEvaluacion">
+                <div class="form-group">
+                    <label for="selectGrupo">Grupo:</label>
+                    <select id="selectGrupo" required></select>
+                </div>
 
-            <div class="form-group score-group">
-                <label for="puntajeFuncionalidad">Puntaje Funcionalidad (0-10):</label>
-                <input type="number" id="puntajeFuncionalidad" min="0" max="10" required />
-            </div>
-            <div class="form-group">
-                <label for="obsFuncionalidad">Observaciones Funcionalidad:</label>
-                <textarea id="obsFuncionalidad" rows="2" placeholder="Observaciones Funcionalidad"></textarea>
-            </div>
+                <div id="grupoInfo" class="group-info" style="display: none;"></div>
+                <div class="form-group">
+                    <label for="idProyecto">ID Proyecto Scratch (opcional):</label>
+                    <input type="text" id="idProyecto" placeholder="Ej: 123456789" />
+                </div>
 
-            <div class="form-group score-group">
-                <label for="puntajeProgramacion">Puntaje Programación (0-10):</label>
-                <input type="number" id="puntajeProgramacion" min="0" max="10" required />
-            </div>
-            <div class="form-group">
-                <label for="obsProgramacion">Observaciones Programación:</label>
-                <textarea id="obsProgramacion" rows="2" placeholder="Observaciones Programación"></textarea>
-            </div>
+                <div class="form-group score-group">
+                    <label for="puntajeFuncionalidad">Puntaje Funcionalidad (0-10):</label>
+                    <div class="subtema-guia">
+                        <p>Evalúa si el proyecto funciona correctamente y cumple con su propósito.</p>
+                        <ul>
+                            <li>🟢 Correcto funcionamiento general (sin errores críticos)</li>
+                            <li>⚙️ Cumplimiento de requerimientos funcionales</li>
+                            <li>🔁 Fluidez en los flujos de uso</li>
+                            <li>🛠️ Gestión adecuada de errores (validaciones, excepciones, etc.)</li>
+                        </ul>
+                    </div>
+                    <input type="number" id="puntajeFuncionalidad" min="0" max="10" placeholder="0-10" required />
+                </div>
+                <div class="form-group">
+                    <label for="obsFuncionalidad">Observaciones Funcionalidad:</label>
+                    <textarea id="obsFuncionalidad" rows="2" placeholder="Observaciones Funcionalidad"></textarea>
+                </div>
 
-            <div class="form-group score-group">
-                <label for="puntajeDiseno">Puntaje Diseño/UX (0-10):</label>
-                <input type="number" id="puntajeDiseno" min="0" max="10" required />
-            </div>
-            <div class="form-group">
-                <label for="obsDiseno">Observaciones Diseño/UX:</label>
-                <textarea id="obsDiseno" rows="2" placeholder="Observaciones Diseño/UX"></textarea>
-            </div>
+                <div class="form-group score-group">
+                    <label for="puntajeProgramacion">Puntaje Programación (0-10):</label>
+                    <div class="subtema-guia">
+                        <p>Evalúa la calidad del código y su estructura técnica.</p>
+                        <ul>
+                            <li>🔍 Limpieza y organización del código</li>
+                            <li>🧩 Modularidad y reutilización</li>
+                            <li>📄 Buena documentación y comentarios</li>
+                            <li>🧪 Uso de buenas prácticas</li>
+                            <li>🛠️ Uso eficiente de tecnologías/lenguajes</li>
+                        </ul>
+                    </div>
+                    <input type="number" id="puntajeProgramacion" min="0" max="10" placeholder="0-10" required />
+                </div>
+                <div class="form-group">
+                    <label for="obsProgramacion">Observaciones Programación:</label>
+                    <textarea id="obsProgramacion" rows="2" placeholder="Observaciones Programación"></textarea>
+                </div>
 
-            <div class="form-group">
-                <label for="mencionEspecialManual">Mención Especial (opcional):</label>
-                <input type="text" id="mencionEspecialManual" placeholder="Escribe una mención especial" />
-            </div>
+                <div class="form-group score-group">
+                    <label for="puntajeDiseno">Puntaje Diseño/UX (0-10):</label>
+                    <div class="subtema-guia">
+                        <p>Evalúa la experiencia del usuario y la estética visual.</p>
+                        <ul>
+                            <li>🎨 Atractivo visual y coherencia gráfica</li>
+                            <li>🧭 Navegación intuitiva</li>
+                            <li>🔤 Legibilidad y jerarquía de la información</li>
+                            <li>🖱️ Interacción fluida y accesible</li>
+                        </ul>
+                    </div>
+                    <input type="number" id="puntajeDiseno" min="0" max="10" placeholder="0-10" required />
+                </div>
+                <div class="form-group">
+                    <label for="obsDiseno">Observaciones Diseño/UX:</label>
+                    <textarea id="obsDiseno" rows="2" placeholder="Observaciones Diseño/UX"></textarea>
+                </div>
 
-            <input type="hidden" id="indiceEdicion" />
+                <div class="form-group score-group">
+                    <label for="puntajeCreatividad">Puntaje Creatividad y Originalidad (0-10):</label>
+                    <div class="subtema-guia">
+                        <p>Evalúa el grado de innovación y diferenciación del proyecto.</p>
+                        <ul>
+                            <li>💡 Propuesta única o novedosa</li>
+                            <li>🧠 Soluciones creativas a problemas comunes</li>
+                            <li>🌀 Uso innovador de tecnología o recursos</li>
+                            <li>🚀 Impacto potencial o sorpresa en la ejecución</li>
+                        </ul>
+                    </div>
+                    <input type="number" id="puntajeCreatividad" min="0" max="10" placeholder="0-10" required />
+                </div>
+                <div class="form-group">
+                    <label for="obsCreatividad">Observaciones Creatividad y Originalidad:</label>
+                    <textarea id="obsCreatividad" rows="2" placeholder="Observaciones Creatividad y Originalidad"></textarea>
+                </div>
 
-            <button type="submit">Guardar Evaluación</button>
-        </form>
+                <div class="form-group score-group">
+                    <label for="puntajeTrabajoEquipo">Puntaje Trabajo en Equipo (0-10):</label>
+                    <div class="subtema-guia">
+                        <p>Evalúa la colaboración y el aporte equitativo entre integrantes.</p>
+                        <ul>
+                            <li>🤝 Comunicación y coordinación</li>
+                            <li>🔄 Distribución equilibrada del trabajo</li>
+                            <li>💬 Resolución de conflictos y toma de decisiones</li>
+                            <li>👥 Participación activa de todos los miembros</li>
+                            <li>📈 Crecimiento y apoyo mutuo</li>
+                        </ul>
+                    </div>
+                    <input type="number" id="puntajeTrabajoEquipo" min="0" max="10" placeholder="0-10" required />
+                </div>
+                <div class="form-group">
+                    <label for="obsTrabajoEquipo">Observaciones Trabajo en Equipo:</label>
+                    <textarea id="obsTrabajoEquipo" rows="2" placeholder="Observaciones Trabajo en Equipo"></textarea>
+                </div>
 
-        <section class="results-section">
-            <h2>Evaluaciones Guardadas</h2>
-            <div id="listaEvaluaciones" class="evaluaciones-list">
-                <p id="noDatosMensaje">No hay evaluaciones guardadas aún.</p>
-            </div>
-            <button id="limpiarDatos" style="display: none;">Eliminar todas las evaluaciones</button>
+                <div class="form-group score-group">
+                    <label for="puntajeProcesoTrabajo">Puntaje Proceso de Trabajo y Esfuerzo (0-10):</label>
+                    <div class="subtema-guia">
+                        <p>Evalúa el compromiso y la planificación durante el desarrollo del proyecto.</p>
+                        <ul>
+                            <li>📅 Planificación y cumplimiento de tiempos</li>
+                            <li>🔍 Investigación previa y entendimiento del problema</li>
+                            <li>⚒️ Iteración y mejoras continuas</li>
+                            <li>⏳ Cantidad y calidad del esfuerzo invertido</li>
+                        </ul>
+                    </div>
+                    <input type="number" id="puntajeProcesoTrabajo" min="0" max="10" placeholder="0-10" required />
+                </div>
+                <div class="form-group">
+                    <label for="obsProcesoTrabajo">Observaciones Proceso de Trabajo y Esfuerzo:</label>
+                    <textarea id="obsProcesoTrabajo" rows="2" placeholder="Observaciones Proceso de Trabajo y Esfuerzo"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="mencionEspecialManual">Mención Especial (opcional):</label>
+                    <input type="text" id="mencionEspecialManual" placeholder="Escribe una mención especial" />
+                </div>
+
+                <input type="hidden" id="indiceEdicion" />
+
+                <button type="submit">Guardar Evaluación</button>
+            </form>
         </section>
 
-        <section class="results-section">
-            <h2>Clasificación de Proyectos</h2>
+        <section id="clasificacion-section" class="results-section">
+            
             <div id="clasificacionResultados" class="clasificacion-container">
                 <p>No hay evaluaciones para mostrar la clasificación.</p>
             </div>
@@ -99,6 +189,15 @@
         <div class="export-section">
             <button id="exportarJsonBtn">Exportar Datos</button>
         </div>
+
+        <section id="evaluaciones-guardadas-section" class="results-section">
+            <h2>Evaluaciones Guardadas</h2>
+            <div id="listaEvaluaciones" class="evaluaciones-list">
+                <p id="noDatosMensaje">No hay evaluaciones guardadas aún.</p>
+            </div>
+            <button id="limpiarDatos" style="display: none;">Eliminar todas las evaluaciones</button>
+        </section>
+
     </div>
     <script src="script.js"></script>
 </body>
