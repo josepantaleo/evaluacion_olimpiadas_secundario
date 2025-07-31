@@ -1,57 +1,35 @@
 [
   {
     "id": "grupo-a",
-    "escuela": "IPEM 146",
-    "nombre": "Los Innovadores",
+    "escuela": "Escuela",
+    "nombre": "",
     "integrantes": [
-      "Juan Pérez",
-      "Ana Gómez",
-      "Luis Rodríguez"
+      "xx",
+      "yy",
+      "zz"
     ],
-    "grado": "3ER Año A TM Secundaria"
+    "grado": "xx Año x xx Secundaria"
   },
   {
     "id": "grupo-b",
-    "escuela": "SAGRADO CORAZON",
-    "nombre": "Scratch Masters",
+    "escuela": "Escuela",
+    "nombre": "",
     "integrantes": [
-      "Sofía Díaz",
-      "Martín López",
-      "Valeria Castro"
+      "xx",
+      "yy",
+      "zz"
     ],
-    "grado": "2DO AÑO B TM Secundaria"
+    "grado": "xx Año x xx Secundaria"
   },
-  {
     "id": "grupo-c",
-    "escuela": "IPEM 260",
-    "nombre": "The Best",
+    "escuela": "Escuela",
+    "nombre": "",
     "integrantes": [
-      "Diego Herrera",
-      "Paula Fernández",
-      "Carlos Giménez"
+      "xx",
+      "yy",
+      "zz"
     ],
-    "grado": "3er Año C TT Secundaria"
+    "grado": "xx Año x xx Primaria"
   },
-  {
-    "id": "grupo-d",
-    "escuela": "Instituto Brizuela",
-    "nombre": "Code Explorers",
-    "integrantes": [
-      "Carolina Diaz",
-      "Paula Lopez",
-      "Francisco Giménez"
-    ],
-    "grado": "2DO AÑO B TM SECUNDARIA"
-  },
-  {
-    "id": "magic-hands",
-    "nombre": "Magic Hands",
-    "escuela": "IPEM 146",
-    "integrantes": [
-      "Laura Tello",
-      "Marcelo Dominguez",
-      "Mariano Perez"
-    ],
-    "grado": "2DO A TM SECUNDARIA"
-  }
+
 ]
